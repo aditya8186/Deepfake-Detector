@@ -24,14 +24,14 @@ dist/
 *.egg-info/
 
 # Logs and artifacts
-logs/
+ /logs/
 *.log
 
 # Data and large assets (keep out of GitHub; store in Drive)
-data/
+ /data/
 
 # Models and checkpoints
-models/
+ /models/
 *.h5
 *.keras
 *.ckpt
