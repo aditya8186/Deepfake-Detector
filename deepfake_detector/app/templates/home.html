@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Home · Deepfake Detector{% endblock %}
+{% block content %}
+  <section class="relative overflow-hidden rounded-3xl border border-[#1f2937] bg-gradient-to-b from-[#0f0f14] to-[#1b1630] p-8 md:p-14">
+    <div class="absolute -left-40 -top-56 h-[800px] w-[1200px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(186,118,255,0.25),_transparent_60%)]"></div>
+    <div class="absolute right-0 -top-24 h-[700px] w-[700px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(107,33,168,0.25),_transparent_60%)]"></div>
+
+    <div class="flex items-center justify-between mb-10">
+      <div class="text-xl font-extrabold tracking-wide"><span class="text-brand">{</span> Deepfake<span class="text-cyan">Lab</span> <span class="text-brand">}</span></div>
+      <nav class="hidden md:flex items-center gap-6 uppercase text-xs tracking-widest text-[#c9c9d4]">
+        <a href="#services" class="hover:text-white">Services</a>
+        <a href="#team" class="hover:text-white">Team</a>
+        <a href="/analytics" class="hover:text-white">Analytics</a>
+      </nav>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-white">
+          <span class="text-brand">}</span> DeepfakeLab<br/>
+          Is a Premier AI<br/>Detection <span class="text-cyan">Provider</span>
+        </h1>
+        <p class="mt-4 text-[#c9c9d4] max-w-xl">Renowned for powering trustworthy media with state-of-the-art facial forensics, temporal modeling, and robust confidence scoring.</p>
+        <div class="mt-6 flex gap-3">
+          <a href="/upload" class="px-6 py-3 rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition">Get Started</a>
+          <a href="/analytics" class="px-6 py-3 rounded-full bg-brand text-white hover:opacity-90 transition">View Analytics</a>
+        </div>
+      </div>
+      <div class="md:pl-10">
+        <div class="rounded-2xl border border-[#2a3752] bg-white/[.04] p-6 shadow-xl">
+          <p class="text-sm text-[#c9c9d4]">“Backbone AI for media verification”</p>
+          <div class="mt-4 grid grid-cols-3 gap-4">
+            <div class="rounded-xl bg-[#0f1423] border border-[#29334a] p-4 text-center">
+              <div class="text-4xl font-extrabold text-white">192k</div>
+              <div class="text-xs text-[#c9c9d4]">Frames processed</div>
+            </div>
+            <div class="rounded-xl bg-[#0f1423] border border-[#29334a] p-4 text-center">
+              <div class="text-4xl font-extrabold text-white">34</div>
+              <div class="text-xs text-[#c9c9d4]">Model epochs</div>
+            </div>
+            <div class="rounded-xl bg-[#0f1423] border border-[#29334a] p-4 text-center">
+              <div class="text-4xl font-extrabold text-white">98%</div>
+              <div class="text-xs text-[#c9c9d4]">Uptime</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mt-8 grid md:grid-cols-2 gap-6">
+    <div class="card p-6">
+      <h3 class="text-xl font-bold mb-2">How it works</h3>
+      <ol class="text-[#c9c9d4] leading-7 list-decimal pl-5">
+        <li>Extract representative frames</li>
+        <li>Detect and crop faces</li>
+        <li>Encode with EfficientNet</li>
+        <li>Model temporal dynamics (BiLSTM)</li>
+        <li>Predict Real/Fake with confidence</li>
+      </ol>
+    </div>
+    <div class="card p-6">
+      <h3 class="text-xl font-bold mb-2">For teams</h3>
+      <p class="text-[#c9c9d4]">Integrate our Flask API or export predictions for post-processing. Use the Analytics dashboard to review performance across datasets.</p>
+      <div class="mt-4">
+        <a class="btn" href="/analytics">Open Analytics</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+

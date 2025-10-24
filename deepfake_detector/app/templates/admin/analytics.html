@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Analytics - Deepfake Detector{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Advanced Model Analytics</h1>
+    <a href="/admin" class="btn secondary">← Back to Dashboard</a>
+  </div>
+
+  <!-- Performance Overview Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-medium text-gray-400">Overall Accuracy</h3>
+          <p class="text-2xl font-bold text-brand">{{ "%.2f"|format(performance_summary.overall_accuracy * 100) }}%</p>
+        </div>
+        <div class="w-12 h-12 bg-brand/20 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-medium text-gray-400">Final Val Accuracy</h3>
+          <p class="text-2xl font-bold text-cyan">{{ "%.2f"|format(performance_summary.final_val_accuracy * 100) }}%</p>
+        </div>
+        <div class="w-12 h-12 bg-cyan/20 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-medium text-gray-400">Training Samples</h3>
+          <p class="text-2xl font-bold text-green-400">{{ performance_summary.training_samples }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-medium text-gray-400">Best Epoch</h3>
+          <p class="text-2xl font-bold text-purple-400">{{ performance_summary.best_epoch }}</p>
+        </div>
+        <div class="w-12 h-12 bg-purple-400/20 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dataset Distribution -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="card">
+      <h2 class="text-xl font-semibold mb-4">Dataset Distribution</h2>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-gray-300">Real Videos</span>
+          <div class="flex items-center space-x-2">
+            <div class="w-32 bg-gray-700 rounded-full h-2">
+              <div class="bg-green-400 h-2 rounded-full" style="width: {{ (dataset_stats.real_samples / dataset_stats.total_samples * 100) if dataset_stats.total_samples > 0 else 0 }}%"></div>
+            </div>
+            <span class="text-sm font-medium text-green-400">{{ dataset_stats.real_samples }}</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-gray-300">Fake Videos</span>
+          <div class="flex items-center space-x-2">
+            <div class="w-32 bg-gray-700 rounded-full h-2">
+              <div class="bg-red-400 h-2 rounded-full" style="width: {{ (dataset_stats.fake_samples / dataset_stats.total_samples * 100) if dataset_stats.total_samples > 0 else 0 }}%"></div>
+            </div>
+            <span class="text-sm font-medium text-red-400">{{ dataset_stats.fake_samples }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="text-xl font-semibold mb-4">Model Performance Metrics</h2>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-gray-300">Macro Avg F1-Score</span>
+          <span class="font-bold text-brand">{{ "%.3f"|format(metrics.get('macro_avg_f1', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">Weighted Avg F1-Score</span>
+          <span class="font-bold text-cyan">{{ "%.3f"|format(metrics.get('weighted_avg_f1', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">Final Validation Loss</span>
+          <span class="font-bold text-yellow-400">{{ "%.4f"|format(performance_summary.final_val_loss) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Classification Metrics -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="card">
+      <h2 class="text-xl font-semibold mb-4">Real Video Performance</h2>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-gray-300">Precision</span>
+          <span class="font-bold text-green-400">{{ "%.3f"|format(metrics.get('real_precision', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">Recall</span>
+          <span class="font-bold text-green-400">{{ "%.3f"|format(metrics.get('real_recall', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">F1-Score</span>
+          <span class="font-bold text-green-400">{{ "%.3f"|format(metrics.get('real_f1', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">Support</span>
+          <span class="font-bold text-green-400">{{ metrics.get('real_support', 0) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="text-xl font-semibold mb-4">Fake Video Performance</h2>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-gray-300">Precision</span>
+          <span class="font-bold text-red-400">{{ "%.3f"|format(metrics.get('fake_precision', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">Recall</span>
+          <span class="font-bold text-red-400">{{ "%.3f"|format(metrics.get('fake_recall', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">F1-Score</span>
+          <span class="font-bold text-red-400">{{ "%.3f"|format(metrics.get('fake_f1', 0)) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-300">Support</span>
+          <span class="font-bold text-red-400">{{ metrics.get('fake_support', 0) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confusion Matrix Visualization -->
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold mb-4">Confusion Matrix</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Actual Confusion Matrix Image -->
+      <div class="flex justify-center">
+        <img src="/admin/confusion_matrix" alt="Confusion Matrix" class="max-w-full h-auto rounded-lg border border-gray-600" 
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="bg-gray-800 p-6 rounded-lg text-center" style="display: none;">
+          <p class="text-gray-400">Confusion matrix image not available</p>
+        </div>
+      </div>
+      
+      <!-- Calculated Confusion Matrix -->
+      <div class="flex justify-center">
+        <div class="bg-gray-800 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold mb-4 text-center">Calculated Matrix</h3>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <!-- Header row -->
+            <div></div>
+            <div class="text-sm font-medium text-gray-300">Predicted Real</div>
+            <div class="text-sm font-medium text-gray-300">Predicted Fake</div>
+            
+            <!-- Actual Real row -->
+            <div class="text-sm font-medium text-gray-300">Actual Real</div>
+            <div class="bg-green-400/20 border border-green-400/50 p-3 rounded text-green-400 font-bold">
+              {{ metrics.get('real_support', 0) - (metrics.get('real_support', 0) * (1 - metrics.get('real_recall', 0)))|int }}
+            </div>
+            <div class="bg-red-400/20 border border-red-400/50 p-3 rounded text-red-400 font-bold">
+              {{ (metrics.get('real_support', 0) * (1 - metrics.get('real_recall', 0)))|int }}
+            </div>
+            
+            <!-- Actual Fake row -->
+            <div class="text-sm font-medium text-gray-300">Actual Fake</div>
+            <div class="bg-red-400/20 border border-red-400/50 p-3 rounded text-red-400 font-bold">
+              {{ (metrics.get('fake_support', 0) * (1 - metrics.get('fake_recall', 0)))|int }}
+            </div>
+            <div class="bg-green-400/20 border border-green-400/50 p-3 rounded text-green-400 font-bold">
+              {{ metrics.get('fake_support', 0) - (metrics.get('fake_support', 0) * (1 - metrics.get('fake_recall', 0)))|int }}
+            </div>
+          </div>
+          <div class="mt-4 text-center text-sm text-gray-400">
+            <p>True Positives: <span class="text-green-400 font-bold">{{ metrics.get('fake_support', 0) - (metrics.get('fake_support', 0) * (1 - metrics.get('fake_recall', 0)))|int }}</span></p>
+            <p>True Negatives: <span class="text-green-400 font-bold">{{ metrics.get('real_support', 0) - (metrics.get('real_support', 0) * (1 - metrics.get('real_recall', 0)))|int }}</span></p>
+            <p>False Positives: <span class="text-red-400 font-bold">{{ (metrics.get('fake_support', 0) * (1 - metrics.get('fake_recall', 0)))|int }}</span></p>
+            <p>False Negatives: <span class="text-red-400 font-bold">{{ (metrics.get('real_support', 0) * (1 - metrics.get('real_recall', 0)))|int }}</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Training History Charts -->
+  {% if history %}
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold mb-4">Training Progress</h2>
+    <div class="h-80 flex items-center justify-center">
+      <canvas id="trainingChart" width="800" height="300"></canvas>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ROC Curve Simulation -->
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold mb-4">Model Performance Visualization</h2>
+    <div class="h-80 flex items-center justify-center">
+      <canvas id="performanceChart" width="800" height="300"></canvas>
+    </div>
+  </div>
+
+  <!-- Raw Classification Report -->
+  {% if report_text %}
+  <div class="card">
+    <h2 class="text-xl font-semibold mb-4">Detailed Classification Report</h2>
+    <div class="bg-gray-800 p-4 rounded-lg overflow-x-auto">
+      <pre class="text-sm text-gray-300 whitespace-pre-wrap">{{ report_text }}</pre>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Chart.js for visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Training History Chart
+  {% if history %}
+  const ctx = document.getElementById('trainingChart').getContext('2d');
+  const history = {{ history|tojson }};
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: history.map(h => `Epoch ${h.epoch}`),
+      datasets: [
+        {
+          label: 'Training Accuracy',
+          data: history.map(h => h.accuracy),
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Validation Accuracy',
+          data: history.map(h => h.val_accuracy),
+          borderColor: '#06b6d4',
+          backgroundColor: 'rgba(6, 182, 212, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Training Loss',
+          data: history.map(h => h.loss),
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          tension: 0.4,
+          yAxisID: 'y1'
+        },
+        {
+          label: 'Validation Loss',
+          data: history.map(h => h.val_loss),
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          tension: 0.4,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Accuracy',
+            color: '#e5e7eb'
+          },
+          ticks: {
+            color: '#9ca3af'
+          },
+          grid: {
+            color: 'rgba(156, 163, 175, 0.1)'
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Loss',
+            color: '#e5e7eb'
+          },
+          ticks: {
+            color: '#9ca3af'
+          },
+          grid: {
+            drawOnChartArea: false,
+          },
+        },
+        x: {
+          ticks: {
+            color: '#9ca3af'
+          },
+          grid: {
+            color: 'rgba(156, 163, 175, 0.1)'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#e5e7eb'
+          }
+        },
+        title: {
+          display: true,
+          text: 'Model Training Progress Over Time',
+          color: '#e5e7eb'
+        }
+      }
+    }
+  });
+  {% endif %}
+
+  // Performance Metrics Chart
+  const ctx2 = document.getElementById('performanceChart').getContext('2d');
+  const metrics = {{ metrics|tojson }};
+  
+  new Chart(ctx2, {
+    type: 'radar',
+    data: {
+      labels: ['Precision', 'Recall', 'F1-Score', 'Accuracy', 'Support'],
+      datasets: [
+        {
+          label: 'Real Videos',
+          data: [
+            {{ metrics.get('real_precision', 0) }},
+            {{ metrics.get('real_recall', 0) }},
+            {{ metrics.get('real_f1', 0) }},
+            {{ metrics.get('accuracy', 0) }},
+            {{ (metrics.get('real_support', 0) / 100) if metrics.get('real_support', 0) > 0 else 0 }}
+          ],
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.2)',
+          pointBackgroundColor: '#10b981',
+          pointBorderColor: '#10b981'
+        },
+        {
+          label: 'Fake Videos',
+          data: [
+            {{ metrics.get('fake_precision', 0) }},
+            {{ metrics.get('fake_recall', 0) }},
+            {{ metrics.get('fake_f1', 0) }},
+            {{ metrics.get('accuracy', 0) }},
+            {{ (metrics.get('fake_support', 0) / 100) if metrics.get('fake_support', 0) > 0 else 0 }}
+          ],
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.2)',
+          pointBackgroundColor: '#ef4444',
+          pointBorderColor: '#ef4444'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 1,
+          ticks: {
+            color: '#9ca3af',
+            stepSize: 0.2
+          },
+          grid: {
+            color: 'rgba(156, 163, 175, 0.1)'
+          },
+          pointLabels: {
+            color: '#e5e7eb'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#e5e7eb'
+          }
+        },
+        title: {
+          display: true,
+          text: 'Model Performance Comparison',
+          color: '#e5e7eb'
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

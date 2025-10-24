@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Deepfake Detector{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+  
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-2">Total Users</h3>
+      <p class="text-3xl font-bold text-brand">{{ total_users }}</p>
+    </div>
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-2">Admin Users</h3>
+      <p class="text-3xl font-bold text-cyan">{{ admin_users }}</p>
+    </div>
+    <div class="card">
+      <h3 class="text-lg font-semibold mb-2">Regular Users</h3>
+      <p class="text-3xl font-bold text-green-400">{{ regular_users }}</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+    <div class="flex flex-wrap gap-4">
+      <a href="/admin/users" class="btn">Manage Users</a>
+      <a href="/admin/analytics" class="btn secondary">View Analytics</a>
+      <a href="/analytics" class="btn secondary">Public Analytics</a>
+    </div>
+  </div>
+
+  <!-- Recent Users -->
+  <div class="card">
+    <h2 class="text-xl font-semibold mb-4">Recent Users</h2>
+    {% if recent_users %}
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-600">
+              <th class="text-left py-2">Email</th>
+              <th class="text-left py-2">Role</th>
+              <th class="text-left py-2">Joined</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in recent_users %}
+            <tr class="border-b border-gray-700">
+              <td class="py-2">{{ user.email }}</td>
+              <td class="py-2">
+                <span class="px-2 py-1 rounded text-xs {{ 'bg-purple-600' if user.is_admin else 'bg-gray-600' }}">
+                  {{ 'Admin' if user.is_admin else 'User' }}
+                </span>
+              </td>
+              <td class="py-2 text-sm text-gray-400">{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-gray-400">No users found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

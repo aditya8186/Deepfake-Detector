@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - Deepfake Detector{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">User Management</h1>
+    <a href="/admin" class="btn secondary">← Back to Dashboard</a>
+  </div>
+
+  <!-- User Statistics -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="card">
+      <h3 class="text-sm font-medium text-gray-400">Total Users</h3>
+      <p class="text-2xl font-bold">{{ users.total }}</p>
+    </div>
+    <div class="card">
+      <h3 class="text-sm font-medium text-gray-400">Page {{ users.page }} of {{ users.pages }}</h3>
+      <p class="text-sm text-gray-400">{{ users.per_page }} per page</p>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-gray-600">
+            <th class="text-left py-3 px-2">ID</th>
+            <th class="text-left py-3 px-2">Email</th>
+            <th class="text-left py-3 px-2">Role</th>
+            <th class="text-left py-3 px-2">Joined</th>
+            <th class="text-left py-3 px-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users.items %}
+          <tr class="border-b border-gray-700 hover:bg-gray-800/50">
+            <td class="py-3 px-2">{{ user.id }}</td>
+            <td class="py-3 px-2">{{ user.email }}</td>
+            <td class="py-3 px-2">
+              <span class="px-2 py-1 rounded text-xs {{ 'bg-purple-600' if user.is_admin else 'bg-gray-600' }}">
+                {{ 'Admin' if user.is_admin else 'User' }}
+              </span>
+            </td>
+            <td class="py-3 px-2 text-sm text-gray-400">
+              {{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'N/A' }}
+            </td>
+            <td class="py-3 px-2">
+              <div class="flex gap-2">
+                {% if user.id != current_user.id %}
+                  <form method="POST" action="/admin/users/{{ user.id }}/toggle_admin" class="inline">
+                    <button type="submit" class="text-xs px-2 py-1 rounded {{ 'bg-yellow-600 hover:bg-yellow-700' if user.is_admin else 'bg-blue-600 hover:bg-blue-700' }}">
+                      {{ 'Remove Admin' if user.is_admin else 'Make Admin' }}
+                    </button>
+                  </form>
+                  <form method="POST" action="/admin/users/{{ user.id }}/delete" class="inline" 
+                        onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                    <button type="submit" class="text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-700">
+                      Delete
+                    </button>
+                  </form>
+                {% else %}
+                  <span class="text-xs text-gray-500">Current User</span>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if users.pages > 1 %}
+    <div class="flex justify-center items-center mt-6 gap-2">
+      {% if users.has_prev %}
+        <a href="?page={{ users.prev_num }}" class="btn secondary text-sm">← Previous</a>
+      {% endif %}
+      
+      <span class="text-sm text-gray-400">
+        Page {{ users.page }} of {{ users.pages }}
+      </span>
+      
+      {% if users.has_next %}
+        <a href="?page={{ users.next_num }}" class="btn secondary text-sm">Next →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

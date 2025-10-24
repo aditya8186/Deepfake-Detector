@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Analytics · Deepfake Detector{% endblock %}
+{% block content %}
+  <div class="card" style="padding:28px">
+    <h2 style="margin-top:0">Model Analytics</h2>
+    <p class="muted">Training curves and evaluation report.</p>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="card" style="padding:16px">
+        <strong>Accuracy over epochs</strong>
+        <canvas id="accChart" height="140"></canvas>
+      </div>
+      <div class="card" style="padding:16px">
+        <strong>Loss over epochs</strong>
+        <canvas id="lossChart" height="140"></canvas>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr; margin-top:16px">
+      <div class="card" style="padding:16px">
+        <strong>Confusion Matrix</strong>
+        <img src="/outputs/confusion_matrix.png" alt="Confusion Matrix" style="max-width:100%; border-radius:12px; border:1px solid #213048" />
+      </div>
+      <div class="card" style="padding:16px">
+        <strong>Classification Report</strong>
+        {% if report_text %}
+          <pre style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; color:#bcd;">{{ report_text }}</pre>
+        {% else %}
+          <p class="muted">No report found. Run evaluation to generate one.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const history = {{ history|tojson }};
+    const epochs = history.map(h => h.epoch);
+    const acc = history.map(h => h.accuracy);
+    const valAcc = history.map(h => h.val_accuracy);
+    const loss = history.map(h => h.loss);
+    const valLoss = history.map(h => h.val_loss);
+
+    const ctxA = document.getElementById('accChart').getContext('2d');
+    new Chart(ctxA, {
+      type: 'line',
+      data: { labels: epochs, datasets: [
+        { label: 'Train Acc', data: acc, borderColor: '#06b6d4', tension: .25 },
+        { label: 'Val Acc', data: valAcc, borderColor: '#8b5cf6', tension: .25 }
+      ]},
+      options: { plugins: { legend: { labels: { color: '#c9d1d9' } } }, scales: { x: { ticks:{ color:'#9aa4af'} }, y: { ticks:{ color:'#9aa4af'} } } }
+    });
+
+    const ctxL = document.getElementById('lossChart').getContext('2d');
+    new Chart(ctxL, {
+      type: 'line',
+      data: { labels: epochs, datasets: [
+        { label: 'Train Loss', data: loss, borderColor: '#22d3ee', tension: .25 },
+        { label: 'Val Loss', data: valLoss, borderColor: '#f59e0b', tension: .25 }
+      ]},
+      options: { plugins: { legend: { labels: { color: '#c9d1d9' } } }, scales: { x: { ticks:{ color:'#9aa4af'} }, y: { ticks:{ color:'#9aa4af'} } } }
+    });
+  </script>
+{% endblock %}
+
+

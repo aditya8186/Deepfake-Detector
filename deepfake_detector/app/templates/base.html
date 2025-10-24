@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Deepfake Detector{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: '#8b5cf6', cyan: '#06b6d4' } } }
+    }
+  </script>
+  <style>
+    :root {
+      --bg:#0b0f19; --card:#0e1424; --muted:#9aa4af; --text:#e5e7eb;
+      --brand:#8b5cf6; --brand-2:#06b6d4; --ring:#2a3752; --glass:rgba(255,255,255,.06);
+    }
+    *{ box-sizing:border-box }
+    body{
+      margin:0; font-family:Inter,system-ui,Arial,sans-serif; color:var(--text);
+      background:radial-gradient(1200px 600px at -10% -20%, #17203a 0%, transparent 60%),
+                 radial-gradient(1000px 500px at 110% -10%, #0f213a 0%, transparent 60%),
+                 linear-gradient(120deg,#0b0f19 0%, #0d1221 100%);
+      overflow-x:hidden;
+    }
+    .bg-anim{
+      position:fixed; inset:-20vh -20vw; pointer-events:none; filter:blur(80px); opacity:.35;
+      background: conic-gradient(from 90deg, #06b6d4, #8b5cf6, #22d3ee, #06b6d4);
+      animation: spin 16s linear infinite;
+      z-index:-1;
+    }
+    @keyframes spin { to { transform: rotate(360deg) } }
+
+    a{ color:var(--text); text-decoration:none }
+    .container{ max-width:1100px; margin:0 auto; padding:28px }
+    .nav{ display:flex; align-items:center; justify-content:space-between; padding:12px 0 }
+    .nav .brand{ font-weight:800; font-size:22px; letter-spacing:.2px;
+      background:linear-gradient(90deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent }
+    .nav .links a{ margin-left:16px; opacity:.9; transition:opacity .2s, transform .2s }
+    .nav .links a:hover{ opacity:1; transform:translateY(-1px) }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border:1px solid var(--ring); border-radius:18px; padding:24px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .card:hover{ transform: translateY(-2px); box-shadow:0 18px 50px rgba(0,0,0,.45) }
+
+    .hero{ display:grid; grid-template-columns:1.2fr .8fr; gap:28px; align-items:center }
+    .btn{ display:inline-block; padding:12px 18px; border-radius:12px; background:linear-gradient(90deg,var(--brand),var(--brand-2)); color:white; font-weight:700; letter-spacing:.2px; box-shadow:0 6px 16px rgba(139,92,246,.25); transition: transform .15s ease, box-shadow .15s ease }
+    .btn:hover{ transform: translateY(-1px); box-shadow:0 10px 22px rgba(139,92,246,.35) }
+    .btn.secondary{ background:#1f2a44 }
+    .muted{ color:var(--muted) }
+
+    .field{ position:relative }
+    .field input{
+      width:100%; padding:14px 14px; border-radius:12px; border:1px solid var(--ring);
+      background:var(--card); color:var(--text); outline:none; transition:border-color .2s, box-shadow .2s
+    }
+    .field input:focus{ border-color:var(--brand); box-shadow:0 0 0 4px rgba(139,92,246,.12) }
+
+    form button{ width:100%; padding:12px 16px; border-radius:12px; border:none; cursor:pointer; margin-top:6px;
+      background:linear-gradient(90deg,var(--brand),var(--brand-2)); color:#fff; font-weight:700 }
+    .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px }
+    .flash{ margin-bottom:12px; padding:10px 12px; border-radius:10px }
+    .flash.error{ background:#421b1b; color:#ffb4b4; border:1px solid #6b1b1b }
+    .flash.success{ background:#113d2c; color:#a2f1c0; border:1px solid #1f6e4c }
+    @media (max-width:900px){ .hero{ grid-template-columns:1fr } }
+  </style>
+</head>
+<body>
+  <div class="bg-anim"></div>
+  <div class="container">
+    <div class="nav">
+      <a href="/" class="brand">Deepfake Detector</a>
+      <div class="links">
+        <a href="/">Home</a>
+        {% if current_user.is_authenticated %}
+          <a href="/upload">Upload</a>
+          {% if current_user.is_admin %}
+            <a href="/admin">Admin</a>
+          {% endif %}
+          <a href="/logout">Logout</a>
+        {% else %}
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
+
+

@@ -1,0 +1,12 @@
+opencv-python
+tensorflow==2.20.0
+numpy
+scikit-learn
+matplotlib
+seaborn
+Flask
+tqdm
+Flask-Login
+Flask-SQLAlchemy
+Werkzeug
+

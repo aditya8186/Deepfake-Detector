@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Result · Deepfake Detector{% endblock %}
+{% block content %}
+  <div class="card" style="max-width:560px; margin:0 auto">
+    <h2 style="margin-top:0">Prediction Result</h2>
+    {% if error %}
+      <p class="muted">{{ error }}</p>
+    {% else %}
+      <p><strong>Prediction:</strong> {{ prediction }}</p>
+      <p><strong>Confidence:</strong> {{ '%.2f' % (confidence * 100) }}%</p>
+    {% endif %}
+    <p style="margin-top:12px"><a class="btn secondary" href="/upload">Analyze another</a></p>
+  </div>
+{% endblock %}
+
+

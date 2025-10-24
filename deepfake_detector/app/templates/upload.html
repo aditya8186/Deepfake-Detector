@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Upload · Deepfake Detector{% endblock %}
+{% block content %}
+  <div class="card" style="max-width:560px; margin:0 auto; padding:28px">
+    <h2 style="margin-top:0">Upload Video</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <div class="field" style="margin-bottom:12px">
+        <input type="file" name="video" accept="video/*" required />
+      </div>
+      <button type="submit">Analyze</button>
+    </form>
+  </div>
+{% endblock %}
+
+
