@@ -1,0 +1,49 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Jupyter and Colab
+.ipynb_checkpoints/
+*.ipynb
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Logs and artifacts
+ /logs/
+*.log
+
+# Data and large assets (keep out of GitHub; store in Drive)
+ /data/
+
+# Models and checkpoints
+ /models/
+*.h5
+*.keras
+*.ckpt
+*.tflite
+
+# Cache
+*.cache/
+__cache__/
+
+# Images/videos generated during runs
+outputs/
+
+# Local config overrides
+*.local
+*.secret
