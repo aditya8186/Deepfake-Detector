@@ -9,7 +9,7 @@
       <p><strong>Prediction:</strong> {{ prediction }}</p>
       <p><strong>Confidence:</strong> {{ '%.2f' % (confidence * 100) }}%</p>
     {% endif %}
-    <p style="margin-top:12px"><a class="btn secondary" href="/upload">Analyze another</a></p>
+    <p style="margin-top:12px"><a class="btn secondary" href="{{ url_for('upload') }}">Analyze another</a></p>
   </div>
 {% endblock %}
 

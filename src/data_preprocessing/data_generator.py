@@ -5,6 +5,7 @@ import cv2
 from tensorflow.keras.utils import Sequence
 from collections import defaultdict
 import random
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 class FrameSequenceGenerator(Sequence):
     def __init__(self, data_dir, batch_size=8, sequence_length=15, target_size=(224, 224), 
@@ -140,11 +141,14 @@ class FrameSequenceGenerator(Sequence):
             # Convert BGR to RGB and resize
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             img = cv2.resize(img, self.target_size)
-            # Normalize to [0, 1]
+            # Normalize to [0, 1] for augmentation
             img = img.astype('float32') / 255.0
             # Apply augmentation if needed
             if self.augment and random.random() > 0.5:
                 img = self._augment_frame(img)
+            # Scale to [0,255] and apply MobileNetV2 preprocessing to match backbone expectations
+            img = (img * 255.0).astype('float32')
+            img = preprocess_input(img)
             sequence.append(img)
         if len(sequence) < self.sequence_length:
             return None

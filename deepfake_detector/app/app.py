@@ -91,7 +91,16 @@ def create_app() -> Flask:
 
     @app.route("/", methods=["GET"]) 
     def home():
+        # Check if user is logged in to determine which home to show
         return render_template("home.html")
+
+    @app.route("/get_started", methods=["GET"])
+    def get_started():
+        """Redirect to login if not authenticated, otherwise to upload"""
+        if current_user.is_authenticated:
+            return redirect(url_for("upload"))
+        flash("Please log in to upload and analyze videos.", "info")
+        return redirect(url_for("login"))
 
     @app.route("/upload", methods=["GET", "POST"]) 
     @login_required

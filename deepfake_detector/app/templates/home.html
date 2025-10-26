@@ -2,15 +2,14 @@
 {% block title %}Home · Deepfake Detector{% endblock %}
 {% block content %}
   <section class="relative overflow-hidden rounded-3xl border border-[#1f2937] bg-gradient-to-b from-[#0f0f14] to-[#1b1630] p-8 md:p-14">
-    <div class="absolute -left-40 -top-56 h-[800px] w-[1200px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(186,118,255,0.25),_transparent_60%)]"></div>
-    <div class="absolute right-0 -top-24 h-[700px] w-[700px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(107,33,168,0.25),_transparent_60%)]"></div>
+    <div class="absolute -left-40 -top-56 h-[800px] w-[1200px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(186,118,255,0.25),_transparent_60%)] pointer-events-none"></div>
+    <div class="absolute right-0 -top-24 h-[700px] w-[700px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(107,33,168,0.25),_transparent_60%)] pointer-events-none"></div>
 
     <div class="flex items-center justify-between mb-10">
       <div class="text-xl font-extrabold tracking-wide"><span class="text-brand">{</span> Deepfake<span class="text-cyan">Lab</span> <span class="text-brand">}</span></div>
       <nav class="hidden md:flex items-center gap-6 uppercase text-xs tracking-widest text-[#c9c9d4]">
         <a href="#services" class="hover:text-white">Services</a>
         <a href="#team" class="hover:text-white">Team</a>
-        <a href="/analytics" class="hover:text-white">Analytics</a>
       </nav>
     </div>
 
@@ -22,8 +21,7 @@
         </h1>
         <p class="mt-4 text-[#c9c9d4] max-w-xl">Renowned for powering trustworthy media with state-of-the-art facial forensics, temporal modeling, and robust confidence scoring.</p>
         <div class="mt-6 flex gap-3">
-          <a href="/upload" class="px-6 py-3 rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition">Get Started</a>
-          <a href="/analytics" class="px-6 py-3 rounded-full bg-brand text-white hover:opacity-90 transition">View Analytics</a>
+          <a href="{{ url_for('get_started') }}" class="px-6 py-3 rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition">Get Started</a>
         </div>
       </div>
       <div class="md:pl-10">
@@ -62,9 +60,6 @@
     <div class="card p-6">
       <h3 class="text-xl font-bold mb-2">For teams</h3>
       <p class="text-[#c9c9d4]">Integrate our Flask API or export predictions for post-processing. Use the Analytics dashboard to review performance across datasets.</p>
-      <div class="mt-4">
-        <a class="btn" href="/analytics">Open Analytics</a>
-      </div>
     </div>
   </section>
 {% endblock %}
